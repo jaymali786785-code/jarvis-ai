@@ -45,3 +45,4 @@ Flutter SDK Termux par officially nahi chalta, isliye build GitHub ke free serve
 
 ## Agar build fail ho
 Actions log ka error copy karke bhej do, fix kar dunga.
+# trigger build
