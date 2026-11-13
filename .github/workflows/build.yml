@@ -14,10 +14,18 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.22.0'
-      - run: flutter create . --platforms=android
-      - run: flutter pub get
-      - run: flutter build apk --release
-      - uses: actions/upload-artifact@v4
+          channel: 'stable'
+      - name: Create android folder
+        run: |
+          flutter create --platforms=android temp_app
+          cp -r temp_app/android .
+          rm -rf temp_app
+      - name: Get deps
+        run: flutter pub get
+      - name: Build APK
+        run: flutter build apk --release
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
         with:
           name: app-release
           path: build/app/outputs/flutter-apk/app-release.apk
