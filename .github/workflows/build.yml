@@ -14,17 +14,14 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.24.5'
-          channel: 'stable'
       - run: flutter config --no-analytics
       - run: flutter create . --platforms=android --project-name jarvis_ai
-      - name: Fix Kotlin and Gradle
+      - name: Fix Kotlin
         run: |
-          echo "Before fix:"
-          cat android/build.gradle | grep kotlin
-          sed -i "s/ext.kotlin_version = '.*'/ext.kotlin_version = '1.9.22'/" android/build.gradle
-          sed -i "s/id \"org.jetbrains.kotlin.android\" version \".*\"/id \"org.jetbrains.kotlin.android\" version \"1.9.22\" apply false/" android/settings.gradle || true
-          echo "After fix:"
-          cat android/build.gradle | grep kotlin
+          cat android/build.gradle || true
+          sed -i "s/ext.kotlin_version = '.*'/ext.kotlin_version = '1.9.22'/" android/build.gradle || true
+          sed -i "s/kotlin_version = '.*'/kotlin_version = '1.9.22'/" android/build.gradle || true
+          cat android/build.gradle || true
       - run: flutter pub get
       - run: flutter build apk --release --no-tree-shake-icons
       - uses: actions/upload-artifact@v4
