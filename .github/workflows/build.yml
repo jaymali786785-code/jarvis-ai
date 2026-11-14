@@ -14,14 +14,19 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.24.5'
-      - run: flutter config --no-analytics
-      - run: flutter create . --platforms=android --project-name jarvis_ai
+      - name: Create Android Project
+        run: |
+          rm -rf android
+          flutter create . --platforms=android --project-name jarvis_ai
+          cat android/app/build.gradle | head -30
+      - name: Fix compileSdk
+        run: |
+          sed -i "s/compileSdkVersion .*/compileSdkVersion 34/" android/app/build.gradle || true
+          sed -i "s/compileSdk .*/compileSdk 34/" android/app/build.gradle || true
+          grep -n "compileSdk" android/app/build.gradle || true
       - run: flutter pub get
-      - name: Build Debug APK
-        run: flutter build apk --debug
-      - name: Build Release APK
-        run: flutter build apk --release --no-tree-shake-icons || flutter build apk --debug
+      - run: flutter build apk --debug
       - uses: actions/upload-artifact@v4
         with:
           name: Jarvis-APK
-          path: build/app/outputs/flutter-apk/*.apk
+          path: build/app/outputs/flutter-apk/app-debug.apk
