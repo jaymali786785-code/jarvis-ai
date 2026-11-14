@@ -13,19 +13,16 @@ jobs:
           java-version: '17'
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.5'
-      - name: Create Android Project
+          flutter-version: '3.19.6'
+          channel: 'stable'
+      - name: Recreate Android
         run: |
           rm -rf android
-          flutter create . --platforms=android --project-name jarvis_ai
-          cat android/app/build.gradle | head -30
-      - name: Fix compileSdk
-        run: |
-          sed -i "s/compileSdkVersion .*/compileSdkVersion 34/" android/app/build.gradle || true
-          sed -i "s/compileSdk .*/compileSdk 34/" android/app/build.gradle || true
-          grep -n "compileSdk" android/app/build.gradle || true
+          flutter create . --platforms=android --project-name jarvis_ai --org com.jarvis
+          ls android/app/build.gradle
       - run: flutter pub get
-      - run: flutter build apk --debug
+      - name: Build Debug
+        run: flutter build apk --debug -v
       - uses: actions/upload-artifact@v4
         with:
           name: Jarvis-APK
